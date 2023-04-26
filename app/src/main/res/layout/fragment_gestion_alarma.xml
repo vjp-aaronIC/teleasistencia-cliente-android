@@ -14,6 +14,7 @@
 
 
         <LinearLayout
+            android:id="@+id/layout_nivel1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
@@ -35,21 +36,14 @@
                     android:layout_weight="90">
 
                     <TextView
-                        android:id="@+id/textViewNombrePacienteGestion"
+                        android:id="@+id/textViewInforme"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16sp"
                         android:layout_marginVertical="8sp"
-                        android:text="@string/paciente_dp"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/textViewTelefonoPacienteGestion"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="16sp"
-                        android:layout_marginVertical="8sp"
-                        android:text="@string/telefono_dp"
+                        android:text="@string/informe"
+                        android:textAllCaps="true"
+                        android:textAlignment="center"
                         android:textSize="20sp" />
 
                 </LinearLayout>
@@ -64,27 +58,54 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_niveles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btn_nivel1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nivel_sp_1"
+                    android:layout_weight="1"></Button>
+                <Button
+                    android:id="@+id/btn_nivel2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nivel_sp_2"
+                    android:layout_weight="1"></Button>
+                <Button
+                    android:id="@+id/btn_nivel3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nivel_sp_3"
+                    android:layout_weight="1"></Button>
+            </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16sp"
                 android:hint="@string/observaciones">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/textInputEditTextObservaciones"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:lines="6"
-                    android:overScrollMode="always"
-                    android:scrollbarStyle="insideInset"
-                    android:scrollbars="vertical"
-                    android:scrollHorizontally="false">
-
-                </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/textInputEditTextObservaciones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:lines="6"
+                android:layout_marginHorizontal="16dp"
+                android:hint="@string/motivo_dp"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="false">
+
+            </com.google.android.material.textfield.TextInputEditText>
 
             <android.widget.Button
                 android:id="@+id/buttonRegistrarLlamadaPaciente"

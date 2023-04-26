@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.teleappsistencia.R;
 import com.example.teleappsistencia.modelos.Alarma;
+import com.example.teleappsistencia.modelos.Contacto;
 import com.example.teleappsistencia.modelos.Paciente;
 import com.example.teleappsistencia.modelos.Persona;
 import com.example.teleappsistencia.modelos.Teleoperador;
@@ -26,6 +27,10 @@ import com.example.teleappsistencia.servicios.APIService;
 import com.example.teleappsistencia.servicios.ClienteRetrofit;
 import com.example.teleappsistencia.utilidades.Constantes;
 import com.example.teleappsistencia.utilidades.Utilidad;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,11 +63,14 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
     private ConstraintLayout cabeceraAlerta;
     private int color;
 
+    private Paciente paciente;
     private String tipoAlarma;
     private String nombrePaciente;
 
     private String apellidosPaciente;
     private String numeroTelefono;
+
+    private Terminal terminal;
 
 
     public AlarmAlertFragment() {
@@ -111,7 +119,6 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
 
         /* Extraemos y cargamos los datos */
         if(alarmaNotificada != null){
-            this.tipoAlarma = "prueba";
             this.extraerDatos();
             this.cargarDatos();
         }
@@ -126,7 +133,7 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
      * @param view
      */
     private void capturarElementos(View view){
-        this.textViewTipoAlarma = (TextView) view.findViewById(R.id.textViewTipoAlarma);
+        this.textViewTipoAlarma = (TextView) view.findViewById(R.id.textViewTipoAlarmaAlerta);
         this.textViewNombrePaciente = (TextView) view.findViewById(R.id.textViewNombrePaciente);
         this.textViewApellidosPaciente = (TextView) view.findViewById(R.id.textViewApellidosPaciente);
         this.textViewTelefono = (TextView) view.findViewById(R.id.textViewTelefono);
@@ -154,8 +161,6 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
      */
     private void extraerDatos(){
         TipoAlarma tipoAlarma_;
-        Terminal terminal;
-        Paciente paciente;
         Persona persona;
 
         /* Dependiendo de cómo se haya creado la alarma, habrá que extraer los datos a partir del Paciente
@@ -165,16 +170,17 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
             this.color = getResources().getColor(R.color.azul, getActivity().getTheme());
             paciente = (Paciente) Utilidad.getObjeto(alarmaNotificada.getId_paciente_ucr(), Constantes.PACIENTE);
             terminal = (Terminal) Utilidad.getObjeto(paciente.getTerminal(), Constantes.TERMINAL);
-            //tipoAlarma_ = (TipoAlarma) Utilidad.getObjeto(alarmaNotificada.getId_tipo_alarma(), Constantes.TIPO_ALARMA);
+            tipoAlarma_ = (TipoAlarma) Utilidad.getObjeto(alarmaNotificada.getId_tipo_alarma(), Constantes.TIPO_ALARMA);
+
         }
         else{
             this.color = getResources().getColor(R.color.verde, getActivity().getTheme());
             terminal = (Terminal) Utilidad.getObjeto(alarmaNotificada.getId_terminal(), Constantes.TERMINAL);
             paciente = (Paciente) Utilidad.getObjeto(terminal.getTitular(), Constantes.PACIENTE);
-            //tipoAlarma_ = (TipoAlarma) Utilidad.getObjeto(alarmaNotificada.getId_tipo_alarma(), Constantes.TIPO_ALARMA);
+            tipoAlarma_ = (TipoAlarma) Utilidad.getObjeto(alarmaNotificada.getId_tipo_alarma(), Constantes.TIPO_ALARMA);
         }
         persona = (Persona) Utilidad.getObjeto(paciente.getPersona(), Constantes.PERSONA);
-        //this.tipoAlarma = tipoAlarma_.getNombre();
+        this.tipoAlarma = tipoAlarma_.getNombre();
         this.nombrePaciente = persona.getNombre();
         this.apellidosPaciente = persona.getApellidos();
         this.numeroTelefono = persona.getTelefonoMovil() + Constantes.SLASH + persona.getTelefonoFijo();
@@ -191,7 +197,7 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
         this.btnAceptarAlarma.setBackgroundTintList(csl);
 
         //Datos que se muestran
-        this.textViewTipoAlarma.setText(Constantes.TIPO_ALARMA_DP_SP + this.tipoAlarma.toString());
+        this.textViewTipoAlarma.setText(Constantes.TIPO_ALARMA_DP_SP + this.tipoAlarma);
         this.textViewNombrePaciente.setText(Constantes.PACIENTE_DP_SP + this.nombrePaciente);
         this.textViewApellidosPaciente.setText(Constantes.APELLIDOS_DP_SP + this.apellidosPaciente);
         this.textViewTelefono.setText(Constantes.TELEFONO_DP_SP + this.numeroTelefono);
@@ -201,7 +207,7 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
     public void onClick(View view) {
         switch(view.getId()){
             case R.id.btnAceptarAlarma:
-                //comprobarAlarma();
+                comprobarAlarma();
                 gestionarAlarma();
                 break;
             case R.id.btnRechazarAlarma:
@@ -262,7 +268,8 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if(response.isSuccessful()){
                     InfoGestionAlarmaFragment iGAF = InfoGestionAlarmaFragment.newInstance(alarmaRecibida);
-                    getActivity().getSupportFragmentManager().beginTransaction()
+                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
                             .replace(R.id.main_fragment, iGAF)
                             .addToBackStack(null)
                             .commit();
@@ -284,10 +291,25 @@ public class AlarmAlertFragment extends DialogFragment implements View.OnClickLi
      * Este método muestra el la ventana de atender la alarma por el teleoperador
      */
     public void gestionarAlarma(){
+        Bundle bundle = new Bundle();
+
+        // se pasan los parametros
+        bundle.putSerializable(Constantes.ARG_ALARMA, alarmaNotificada);
+        bundle.putSerializable(Constantes.ARG_PACIENTE, paciente);
+        bundle.putSerializable(Constantes.ARG_TERMINAL, terminal);
+        bundle.putSerializable(Constantes.ARG_COLOR, color);
+
+        GestionAlarmaFragment gestionAlarmaFragment = new GestionAlarmaFragment();
+        gestionAlarmaFragment.setArguments(bundle);
+
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_fragment, new AtenderAlarmaFragment())
+                .replace(R.id.main_fragment, gestionAlarmaFragment)
                 .addToBackStack(null)
                 .commit();
+
+
         dismiss();
     }
+
+
 }

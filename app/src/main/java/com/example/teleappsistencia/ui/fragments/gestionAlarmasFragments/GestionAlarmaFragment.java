@@ -60,7 +60,6 @@ public class GestionAlarmaFragment extends Fragment implements View.OnClickListe
     //Parámetros de inicio
     private Alarma alarma;
     private int color;
-    private String nombrePaciente;
     private String numeroTelefono;
     private List<Object> lContactos;
     private Terminal terminal;
@@ -137,10 +136,9 @@ public class GestionAlarmaFragment extends Fragment implements View.OnClickListe
         /* Si tenemos argumentos, los recogemos (comprobación por seguridad), sugerencia de Android Studio */
         if (getArguments() != null) {
             alarma = (Alarma) getArguments().getSerializable(Constantes.ARG_ALARMA);
-            nombrePaciente = getArguments().getString(Constantes.ARG_NOMBREPACIENTE);
-            numeroTelefono = getArguments().getString(Constantes.ARG_NUMEROTELEFONO);
-            lContactos = (ArrayList<Object>) getArguments().getSerializable(Constantes.ARG_LCONTACTOS);
+//          lContactos = (ArrayList<Object>) getArguments().getSerializable(Constantes.ARG_LCONTACTOS);
             paciente = (Paciente) getArguments().getSerializable(Constantes.ARG_PACIENTE);
+            extraerContactos(paciente.getId());
             terminal = (Terminal) getArguments().getSerializable(Constantes.ARG_TERMINAL);
             color = getArguments().getInt(Constantes.ARG_COLOR);
         }
@@ -178,8 +176,6 @@ public class GestionAlarmaFragment extends Fragment implements View.OnClickListe
      */
     private void capturarElementos(View view){
         //TextView
-        this.textViewNombre = (TextView) view.findViewById(R.id.textViewNombrePacienteGestion);
-        this.textViewTelefono = (TextView) view.findViewById(R.id.textViewTelefonoPacienteGestion);
 
         //TextInputEditText
         this.editTextObservaciones = (TextInputEditText) view.findViewById(R.id.textInputEditTextObservaciones);
@@ -255,8 +251,6 @@ public class GestionAlarmaFragment extends Fragment implements View.OnClickListe
      * Este método carga los datos del paciente
      */
     private void cargarDatos(){
-        this.textViewNombre.setText(this.nombrePaciente);
-        this.textViewTelefono.setText(this.numeroTelefono);
         cambiarColorbotones();
     }
 
@@ -766,6 +760,28 @@ public class GestionAlarmaFragment extends Fragment implements View.OnClickListe
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(getContext(), Constantes.ERROR_ + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    // obtiene los contactos cercanos del paciente
+    private void extraerContactos(int idPaciente) {
+        APIService apiService = ClienteRetrofit.getInstance().getAPIService();
+        Call<List<Object>> call = apiService.getContactosbyIdPaciente(idPaciente, Constantes.BEARER_ESPACIO + Utilidad.getToken().getAccess());
+        call.enqueue(new Callback<List<Object>>() {
+            @Override
+            public void onResponse(Call<List<Object>> call, Response<List<Object>> response) {
+                if(response.isSuccessful()){
+                    lContactos = (ArrayList<Object>) response.body();
+                }
+                else{
+                    Toast.makeText(getContext(), Constantes.ERROR_ + response.message(), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Object>> call, Throwable t) {
+                Toast.makeText(getContext(), Constantes.ERROR_NO_CONTACTOS, Toast.LENGTH_LONG).show();
             }
         });
     }

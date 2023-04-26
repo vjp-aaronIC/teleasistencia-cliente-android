@@ -92,9 +92,7 @@ public class Constantes {
     public static final String TIPO_VIVIENDA = "Tipo vivienda";
     public static final String USUARIO = "Usuario";
     public static final String TERMINAL = "Terminal";
-    public static final String TIPO_ALARMA = "Tipo alarma";
-
-    public static final String TIPO_ALARMA_DP_SP = "Tipo alarma: ";
+    public static final String TIPO_ALARMA = "TipoAlarma";
 
     /**
      * Constantes con los nombres de los submenus.
@@ -269,6 +267,8 @@ public class Constantes {
     public static final String ID_TERMINAL_DP_SP = "ID Terminal: ";
     public static final String PACIENTE_DP_SP = "Paciente: ";
     public static final String TELEFONO_DP_SP = "Teléfono: ";
+
+    public static final String TIPO_ALARMA_DP_SP = "Tipo alarma: ";
 
     /* Constantes Simbolos Varios */
     public final static String ESPACIO_GUION_ESPACIO = " - ";

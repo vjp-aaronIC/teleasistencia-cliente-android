@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.teleappsistencia.modelos.Usuario;
 import com.example.teleappsistencia.servicios.APIService;
+import com.example.teleappsistencia.ui.fragments.acercaDe.AcercaDeFragment;
 import com.example.teleappsistencia.ui.fragments.alarma.InsertarAlarmaFragment;
 import com.example.teleappsistencia.ui.fragments.alarma.ListarAlarmasDeHoyFragment;
 import com.example.teleappsistencia.ui.fragments.alarma.ListarAlarmasFragment;
@@ -584,6 +585,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         }
+
+        // Menu Acerca De.
+        menuModel = new MenuModel(getResources().getString(R.string.menu_acercaDe), false, false, new AcercaDeFragment());
+        headerList.add(menuModel);
+
     }
 
     /**

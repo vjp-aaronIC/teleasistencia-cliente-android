@@ -409,7 +409,7 @@
     <string name="nivel_sp_1">nivel 1</string>
     <string name="nivel_sp_2">nivel 2</string>
     <string name="nivel_sp_3">nivel 3</string>
-    <string name="motivo_dp">Motivo:</string>
+    <string name="motivo_dp">  Motivo:</string>
     <string name="informe">Informe</string>
     <string name="nueva_alarma">¡Nueva Alarma!</string>
     <string name="terminal_dp">Terminal:</string>
@@ -498,4 +498,12 @@
     <string name="dispositivo_dp">Dispositivo:</string>
     <!-- no pisar este bloque -->
 
+    <!-- acerca de -->
+    <string name="info_acercaDe">"El software ha sido desarrollado bajo la licencia GPL3 por el departamento de Informática del IES “Valle del Jerte” de Plasencia, con la colaboración principal de Fréderic Sánchez, Angel Enrique Pineda y Jesús Redondo.
+
+Especial mención al departamento de Atención Sociosanitaria del IES “San Martín” de Talayuela. Partícipes e impulsores de la plataforma de prácticas de teleasistencia
+
+Los alumnos que han contribuido en el desarrollo de este proyecto son:"
+</string>
+    <string name="menu_acercaDe">Acerca de</string>
 </resources>
